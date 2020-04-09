@@ -261,6 +261,8 @@ The above is 95% we need to know about PyTorch
 
 Note: The `rank` of a tensor is the number of dimensions, or axes. An RGB image is a rank 3 tensor. A vector is a rank 1 tensor. Tensor is just high dimensional arrays.
 
+Trick: for `matplotlib` animations, set `rc('animation', html='jshtml')` instead of `%matplotlib notebook`.
+
 Vocab
 
 - learning rate: step size to multiply gradient by
