@@ -127,9 +127,84 @@ learn.predict("I really loved that movie, it was awesome!")
 
 *Trick: Jeremy created a random forest to find best hyperparameter setting. The best number for discriminative learning rate is 2.6^4. This is similar to AutoML for hyperparam search.*
 
+For training Chinese language models, search the forum for more info.
+
 ## Tabular Data using Deep Learning
 
 ![alt text](./images/tabular_data_usecases.png "Tabular Data Use Cases")
+
+People were skeptical about using neural nets on tabular data, they often use logistic regression, random forest, gradient boosting machines to do it. In fact, NN is extremely useful for tabular data.
+
+With NN, you don't need to hand engineer features as much as before. It's more accurate and requires less maintenance. Jemery used to use Random Forest 99% of the time for tabular data, now he uses NN 90% of the time.
+
+Nobody else created a library for NN on tabular data, fastai has `fastai.tabular`. In the notebook `lesson4-tabular` there is a detailed example.
+
+It assumes the data is in a pandas dataframe. Pandas can read from csv, relational db, Spark and Hadoop.
+
+The independent variables (features) can be continuous or categorical. With NN, we use **embeddings** for categorical variables.
+
+Instead of having "transform"s as in CV such as brightening, flipping, normalization etc., we have "processor"s for tabular data. The difference is that transforms are for data augmentation and are different each time, but processors are run once ahead of time.
+
+```py
+dep_var = 'salary'
+cat_names = ['workclass', 'education', 'marital-status', 'occupation', 'relationship', 'race']
+cont_names = ['age', 'fnlwgt', 'education-num']
+
+# 1. Deal with missing values in some way
+# 2. Use pandas categorical variables
+# 3. Normalize continuous variables by mean 0 and std 1
+procs = [FillMissing, Categorify, Normalize]
+
+data = (TabularList.from_df(df, path=path, cat_names=cat_names, cont_names=cont_names, procs=procs)
+                            # when split validation set, must have contiguous indices
+                            # think time periods, video frames, or other structure in data
+                           .split_by_idx(list(range(800, 1000)))
+                           .label_from_df(cols=dep_var)
+                           .add_test(test)
+                           .databunch())
+
+data.show_batch(rows=10)
+learn = tabular_learner(data, layers=[200, 100], metrics=accuracy)
+learn.fit(1, 1e-2)
+
+# Inference
+row = df.iloc[0]
+learn.predict(row)
+```
+
+For time series tabular data, you generally don't use RNN for them. Instead, you can time box them into day_of_week, time_of_day, etc. and it will give you state of the art result.
+
+## Collaborative Filtering
+
+When you have data about who-bought-what, who-liked-what, you can have two columns like [userId, productId] in the most basic form. Other metadata can be added, like timestamp, review, etc.
+
+This matrix is very sparse because most users didn't buy most products / watched most movies.
+
+In this example our data has `userId, movieId, rating, timestamp`.
+
+```py
+ratings = pd.read_csv(path/'ratings.csv')
+
+data = CollabDataBunch.from_df(ratings, seed=42)
+y_range = [0,5.5]
+
+learn = collab_learner(data, n_factors=50, y_range=y_range)
+```
+
+**For recommender systems, a big challenge is the Cold Start problem**. It means that we particularly care about recommending **new movies** or recommend relevant movies to **new users** which we don't have any data for. The solution is to have a second model on user or movie metadata to quatify the similarities.
+
+Netflix fixed the cold start problem by UX. It asks a new user whether they like the movies they show as a survey. For new movies, they just need to let some hundreds of people watch it and rate them. It wasn't quite a cold start problem for Netflix.
+
+But for selling products, you might not want people to look at your range of products. You could for example find the metadata of the users such as what geography they are from, their age, gender, and other features to predict whether they would like something.
+
+Collaborative filtering is specifically for when you already have some data about the preferences of the users.
+
+
+
+
+
+
+
 
 
 
