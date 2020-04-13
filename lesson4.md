@@ -123,6 +123,19 @@ learn.fit_one_cycle(2, slice(1e-3/(2.6**4),1e-3), moms=(0.8,0.7))
 learn.predict("I really loved that movie, it was awesome!")
 ```
 
+NOTE: When creating the classifier learner, we MUST have the same `vocab` as the pretrained language model. The line
+
+```py
+data_clas = (TextList.from_folder(path, vocab=data_lm.vocab)
+    ...
+```
+
+is very important. Have the right `data_lm` in memory and create `data_clas` with its `vocab`, or there will be an error when loading the pretrained model via `learn.load_encoder('fine_tuned_enc')` and it will say
+
+```
+Error(s) in loading state_dict for AWD_LSTM: size mismatch...
+```
+
 *Trick: for text classification, **unfreezing one layer at a time and train some more** is an effective strategy.*
 
 *Trick: Jeremy created a random forest to find best hyperparameter setting. The best number for discriminative learning rate is 2.6^4. This is similar to AutoML for hyperparam search.*
@@ -199,13 +212,12 @@ But for selling products, you might not want people to look at your range of pro
 
 Collaborative filtering is specifically for when you already have some data about the preferences of the users.
 
+A user has an embedding vector. A movie has an embedding vector. A bias term needs to be added in the user embedding and can be interpretted as *the user's tendency to like movies in general regardless of what movie*. Similarly, a bias term in the movie embedding is like *the likeability of a movie regardless of users*.
 
+The target value is the rating in the range 0 to 5. We dot the user embedding and the movie (item) embedding along with the weights, and *pass it through a sigmoid* (and times 5) to get a numbder between 0 - 5. Notice that this is actually a "logistic regression" (linear layer on inputs and a sigmoid) but with MSE loss and target variables as numbers between 0 - 5.
 
+Note that this mapping from the product of embeddings to the range [0, 5] is still regression and not classification, so the loss used is MSE and not cross entropy.
 
+Why pass through the sigmoid? It makes the model learn easier and let the weights converge to relevant results. It is very common to use sigmoid or softmax as the last layer to produce the output.
 
-
-
-
-
-
-
+Question: it seems this is a sigmoid(linear model) with MSE, the optimization is nonconvex. How is it done?
