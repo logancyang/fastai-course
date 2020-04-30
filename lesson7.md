@@ -317,3 +317,8 @@ What GRU or LSTM is basically doing is to determine how much of the green arrow 
 - Read papers and write blog posts in plain language.
 - Build visualizations and apps. Just finish something.
 
+## Answers and Comments from Jeremy
+
+- Reinforcement learning is far from being useful for average real world problems. Transfer learning is the most promising.
+- If you can build the notebooks using fastai from blank, it's already really rare and very competent in DL.
+
