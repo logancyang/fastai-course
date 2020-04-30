@@ -1,4 +1,4 @@
-# Lesson 7: Resnets from scratch; U-net; Generative adversarial networks
+# Lesson 7: Resnets from scratch; U-net; Generative adversarial networks; RNNs
 
 Notebook: `lesson7-resnet-mnist`
 
@@ -11,7 +11,7 @@ Initial steps:
 1. Create ItemList from image folders
 2. Split into `train` and `valid`.
 
-Tip: for data augmentation, MNIST can't have much transformation, you can't flip it because it changes the meaning of the number, you can't zoom because it's low res. The only transform is to add random padding. *Do this transform on training set but not validation set.*
+*Tip: for data augmentation, MNIST can't have much transformation, you can't flip it because it changes the meaning of the number, you can't zoom because it's low res. The only transform is to add random padding. **Do this transform on training set but not validation set**.*
 
 If not using a pretrained model, don't pass in `stat` in `normalize()` for databunch, it grabs a subset of the data at random and figures out how to normalize.
 
@@ -167,7 +167,7 @@ learn.fit_one_cycle(12, max_lr=0.05)
 print(learn.summary())
 ```
 
-Tip: when you try out new architectures, keep refactor the code and reuse more to **avoid mistakes**.
+*Tip: when you try out new architectures, keep refactor the code and reuse more to **avoid mistakes**.*
 
 Resnet is quite good and can reach SOTA accuracy for a lot of tasks. More modern techniques such as group convolutions don't train as fast.
 
@@ -189,6 +189,8 @@ Trick: if you see two convs in a row, probably should use a resnet block instead
 
 U-net came before resnet and densenet but it had a lot of the similar ideas and worked great for segmentation tasks.
 
+*Tip: don't use U-net for classification, because you only need the down-sampling part, not the up-sampling part. Use U-net for generative purposes such as image segmentation because the output resolution is the same as input resolution.*
+
 ## Image Restoration with U-Net and GAN
 
 Notebook: superres-gan
@@ -203,6 +205,82 @@ Traditionally, the GAN is hard to train because the initial generator and critic
 
 To train a fastai version GAN, we need two folders, one with high-res original images, one with generated images.
 
+Trick: free GPU memory without restarting notebook, run
+
+```py
+my_learner = None
+gc.collect()
+```
+
+Running `nvidia-smi` won't show it freed because pytorch has pre-allocated cache, but it's available.
+
+```py
+# need to wrap the loss with AdaptiveLoss for GAN to work
+# Will revisit in Part II
+loss_critic = AdaptiveLoss(nn.BCEWithLogitsLoss())
+# Use gan_critic() and not resnet here
+def create_critic_learner(data, metrics):
+    return Learner(data, gan_critic(), metrics=metrics, loss_func=loss_critic, wd=wd)
+# GAN version of accuracy: accuracy_thresh_expand
+learn_critic = create_critic_learner(data_crit, accuracy_thresh_expand)
+
+learn_critic.fit_one_cycle(6, 1e-3)
+learn_critic.save('critic-pre2')
+```
+
+*Tip: for GAN, fastai's `GANLearner` figures out the back and forth training of the generator and the critic for us. Use the hyperparameters like this*
+
+```py
+switcher = partial(AdaptiveGANSwitcher, critic_thresh=0.65)
+learn = GANLearner.from_learners(
+    learn_gen, learn_crit,
+    weights_gen=(1.,50.),
+    show_img=False,
+    switcher=switcher,
+    opt_func=partial(optim.Adam, betas=(0.,0.99)),
+    wd=wd
+)
+
+learn.callback_fns.append(partial(GANDiscriminativeLR, mult_lr=5.))
+
+lr = 1e-4
+learn.fit(40,lr)
+
+# NOTE: the train_loss and gen_loss should stay around the same values
+# because when the generator and critic both get better, the loss is relative.
+# The only way to tell how it's doing is by looking at the image results
+# Use show_img=True to check
+```
+
+### WGAN
+
+Notebook `wgan` is briefly mentioned for the task of generating image from pure noise without pretraining. Jeremy mentioned it's a relatively old approach and the task isn't particularly useful, but it's good research exercise.
+
+### Perceptual Loss (Feature Loss)
+
+Notebook: `lesson7-superres`
+
+Paper: [Perceptual Losses for Real-Time Style Transfer and Super-Resolution](https://arxiv.org/pdf/1603.08155.pdf)
+
+Jeremy didn't like the name "perceptual loss" and he named it "feature loss" in fastai library.
+
+Convention: in U-net shaped architecture, the down-sampling part is called *encoder* and the up-sampling part is called *decoder*.
+
+The paper's idea is to compare the generated image with the target image using a new loss function, that is, the activation from a middle layer in an ImageNet pretrained VGG network. Use the two images and pass them through this network up to that layer and check the difference. The intuition for this is that, each pixel in that activation should be capturing some feature of ImageNet images, such as furriness, round shaped, has eyeballs, etc. If the two images agree on these features they should have small loss with this loss function.
+
+<img src="./images/feature-loss.png" alt="Residual Block" align="middle"/>
+
+With 1 GPU and 1-2hr time, we can generate medium res images from low res images, or high res from medium res using this approach.
+
+A fastai student Jason in 2018 cohort created the famous [deOldify](https://github.com/jantic/DeOldify) project. He crappified color images to black and white, and trained *a GAN with feature loss* to color 19th century images!
+
+## Recap
+
+<img src="./images/recap.png" alt="Residual Block" align="middle"/>
+
+Watch the videos again and go through notebooks in detail to understand better.
+
+## Recurrent Neural Network
 
 
 

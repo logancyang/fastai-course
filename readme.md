@@ -14,5 +14,5 @@ The code in each lesson can serve as templates and a starting point for an actua
 - [Lesson 4: NLP; Tabular Data; Collaborative Filtering; Embeddings](./lesson4.md)
 - [Lesson 5: Collaborative Filtering cont.; Backpropagation; Accelerated SGD; NN from Scratch](./lesson5.md)
 - [Lesson 6: Regression on Tabular Time Series; Regularization; Convolution; Data Ethics](./lesson6.md)
-- [Lesson 7: Resnets from scratch; U-net; Generative adversarial networks](./lesson7.md)
+- [Lesson 7: Resnets from scratch; U-net; Generative adversarial networks; RNN](./lesson7.md)
 
