@@ -123,7 +123,7 @@ Check out the fantastic paper [Visualizing the Loss Landscape](https://arxiv.org
 
 The batch norm had the same story. This reminds us *innovation usually comes from intuition*. Intuition comes first, people realize what's going on and why it works much later.
 
-<img src="./images/loss-landscape.png" alt="Residual Block" align="middle"/>
+<img src="./images/loss-landscape.png" alt="Loss Landscape" align="middle"/>
 
 fastai has `res_block`. We add a `res_block` after every `conv2` layer from previous code, we get
 
@@ -179,7 +179,7 @@ DenseNet is very memory intensive because it maintains all previous features, BU
 
 Use resnet34 and half-stride. What half-stride is really doing is *nearest-neighbor interpolation* or a *bilinear interpolation* with stride 1, it up samples the patch and increases the size, as shown below.
 
-<img src="./images/conv-upsample.png" alt="Residual Block" align="middle"/>
+<img src="./images/conv-upsample.png" alt="Conv UpSample" align="middle"/>
 
 Fantastic paper for convolution: [A Guide to Convolution Arithmetic for Deep Learning](https://arxiv.org/pdf/1603.07285.pdf)
 
@@ -201,7 +201,7 @@ In order to make our model produce high quality results, we need to create a cus
 
 Traditionally, the GAN is hard to train because the initial generator and critic are bad. Fastai uses pretrained generator and critic, so they are already pretty good. After that the training of GAN is much easier.
 
-<img src="./images/fastai-gan.png" alt="Residual Block" align="middle"/>
+<img src="./images/fastai-gan.png" alt="GAN" align="middle"/>
 
 To train a fastai version GAN, we need two folders, one with high-res original images, one with generated images.
 
@@ -268,7 +268,7 @@ Convention: in U-net shaped architecture, the down-sampling part is called *enco
 
 The paper's idea is to compare the generated image with the target image using a new loss function, that is, the activation from a middle layer in an ImageNet pretrained VGG network. Use the two images and pass them through this network up to that layer and check the difference. The intuition for this is that, each pixel in that activation should be capturing some feature of ImageNet images, such as furriness, round shaped, has eyeballs, etc. If the two images agree on these features they should have small loss with this loss function.
 
-<img src="./images/feature-loss.png" alt="Residual Block" align="middle"/>
+<img src="./images/feature-loss.png" alt="Feature Loss" align="middle"/>
 
 With 1 GPU and 1-2hr time, we can generate medium res images from low res images, or high res from medium res using this approach.
 
@@ -276,18 +276,44 @@ A fastai student Jason in 2018 cohort created the famous [deOldify](https://gith
 
 ## Recap
 
-<img src="./images/recap.png" alt="Residual Block" align="middle"/>
+<img src="./images/recap.png" alt="recap" align="middle"/>
 
 Watch the videos again and go through notebooks in detail to understand better.
 
 ## Recurrent Neural Network
 
+Notebook: `lesson7-human-numbers`
 
+Toy example dataset with numbers in English, the task is to predict the next word -- language model.
 
+`xxbos`: beginning of stream, meaning start of document.
 
+`data.bptt`: `bptt` is backprop thru time
 
+Basic NN with 1 hidden layer:
 
+<img src="./images/basic-nn.png" alt="Basic NN diagram" align="middle"/>
 
+One step toward RNN
 
+<img src="./images/basic-rnn.png" alt="To RNN" align="middle"/>
 
+Basic RNN:
+
+<img src="./images/basic-rnnn.png" alt="Basic RNN" align="middle"/>
+
+Refactor, make it a loop --> RNN
+
+<img src="./images/rnn.png" alt="RNN" align="middle"/>
+
+There is nothing new for an RNN, it is just a fully connected NN with maintained states.
+
+What GRU or LSTM is basically doing is to determine how much of the green arrow to keep and how much of the brown arrow to keep. Will see more in Course Part II.
+
+<img src="./images/end.png" alt="The end" align="middle"/>
+
+## Homework
+
+- Read papers and write blog posts in plain language.
+- Build visualizations and apps. Just finish something.
 
