@@ -107,7 +107,7 @@ A larger momentum means more variations from minibatch to minibatch ==> more reg
 In the regularization techniques, we
 
 - always want batch norm
-- weight decay is more preferable than L2 regularization
+- weight decay is more preferable than L2 regularization (are they not the same thing? [yes and no](https://towardsdatascience.com/weight-decay-l2-regularization-90a9e17713cd)? )
 - weight decay vs. dropout? No definitive answer. Use a bit of both. Try it out.
 
 The next regularization technique is **data augmentation**. Jeremy is most excited about this approach.
