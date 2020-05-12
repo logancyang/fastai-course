@@ -35,7 +35,8 @@ https://github.com/fastai/fastai/tree/master/docs_src/...
 For multi-label image classification such as this one, to put this in a `DataBunch` while using the [data block API](https://docs.fast.ai/data_block.html), we need to use `ImageList` (and not `ImageDataBunch`). This will make sure the model created has the proper loss function to deal with the multiple classes.
 
 ```py
-# This does image data augmentation by flipping them horizontally by default. Here we enable vertical flipping as well so it rotates every 90 degrees left and right, so 8 possible settings.
+# This does image data augmentation by flipping them horizontally by default.
+# Here we enable vertical flipping as well so it rotates every 90 degrees left and right, so 8 possible settings.
 # warp: fastai has fast perspective warping. For satellite image we don't need warping
 tfms = get_transforms(flip_vert=True, max_lighting=0.1, max_zoom=1.05, max_warp=0.)
 ```
@@ -47,7 +48,8 @@ We often want to call the same function but with different values of a parameter
 def acc_02(inp, targ):
     return accuracy_thresh(inp, targ, thresh=0.2)
 
-# Equivalent: a CS concept called "partial" or partial function application, pass in the original function and the param, returns a new wrapper function (py3)
+# Equivalent: a CS concept called "partial" or partial function application,
+# pass in the original function and the param, returns a new wrapper function (py3)
 acc_02 = partial(accuracy_thresh, thresh=0.2)
 ```
 
@@ -56,7 +58,8 @@ This is really common thing to do!
 ```
 Question: How to use online feedback to retrain model?
 
-Answer: Add the labeled new data into the training set, load the old model, unfreeze, use a slightly larger learning rate and more epochs, train (fine-tune) the model some more.
+Answer: Add the labeled new data into the training set, load the old model, unfreeze,
+use a slightly larger learning rate and more epochs, train (fine-tune) the model some more.
 ```
 
 Before `unfreeze`, we train the model's last layer. The learning rate should look like this.
@@ -177,7 +180,8 @@ A Visual Proof that NN can approximate any shape, or, [universal approximation t
 ```
 What really is deep learning from a math perspective:
 
-It's a series of matrix multiplications with max(x, 0) (ReLU) in between, and we use gradient descent to adjust the weights in these matrices to reduce the final error.
+It's a series of matrix multiplications with max(x, 0) (ReLU) in between,
+and we use gradient descent to adjust the weights in these matrices to reduce the final error.
 
 The forward pass is something like
 

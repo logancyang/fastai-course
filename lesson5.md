@@ -47,9 +47,11 @@ When you call `fit`,
 ```py
 # All layers use the same learning rate
 fit(num_epoch, lr=1e-3)
-# The last layers (added by create_cnn) use 1e-3, and ALL OTHER LAYERS USE THIS VALUE / 3. Will discuss the /3 in part II. It's a quirk of batch normalization
+# The last layers (added by create_cnn) use 1e-3, and ALL OTHER LAYERS USE THIS VALUE / 3.
+# Will discuss the /3 in part II. It's a quirk of batch normalization
 fit(num_epoch, lr=slice(1e-3))
-# The last layers added by create_cnn will use 1e-3, the first layers will use 1e-5, the middle layers will have equally spaced lr between the two
+# The last layers added by create_cnn will use 1e-3, the first layers will use 1e-5,
+# the middle layers will have equally spaced lr between the two
 fit(num_epoch, lr=slice(1e-5, 1e-3))
 ```
 
@@ -218,7 +220,7 @@ losses = [update(x,y,lr) for x,y in data.train_dl]
 
 In this case, weight decay is equivalent to L2 regularization because the gradient of the regularization term `wd * w^2` gives `2 wd * w`.
 
-(Later there's a case where weight decay != L2 regularization)
+*(Later there's a case where weight decay != L2 regularization!!)*
 
 Weight decay helps prevent overfitting, so
 - we can have a giant model without overfitting

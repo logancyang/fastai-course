@@ -190,9 +190,11 @@ Say we have a `(w=11, h=11, ch=512)` shape layer, that is the **last layer of th
     --
     W37
 
-Each weight vector W has length 512, it dots the (512, 1) vector, produces a weighted sum, activation A1 for class 1. Same for other Ws. We then have an output of (A1 ... A37).
+Each weight vector W has length 512, it dots the (512, 1) vector, produces a weighted sum,
+activation A1 for class 1. Same for other Ws. We then have an output of (A1 ... A37).
 
-The different setting of each W, a shape (1, 512) row vector is the deciding factor that maps the 512 features from average pooling into the final 37 classes.
+The different setting of each W, a shape (1, 512) row vector is the deciding factor that maps
+the 512 features from average pooling into the final 37 classes.
 ```
 
 This is how the classification is done. Each averaged number from a slice indicates a "feature", it could be "how fluffy it is", "does it have pointy ears", etc. The average is equivalent to a sum of the activations in each slice indicating how activated collectively they are in one slice.
@@ -252,7 +254,7 @@ Check out Rachel's TED talk [here](https://www.youtube.com/watch?v=LqjP7O9SxOM).
 
 <img src="./images/ethics.png" alt="convolution 2" align="middle"/>
 
-One potential solution: put human in the loop!
+**One potential solution: put human in the loop!**
 
 Don't be slaves of algorithm, avoid run-away feedback loops (bad recommendations feed bad behaviors).
 

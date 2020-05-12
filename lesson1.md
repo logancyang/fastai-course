@@ -38,7 +38,8 @@ len(data.classes), data.c
 # error_rate is for validation set, because creating a DataBunch object automatically creates the validation set
 learn = cnn_learner(data, models.resnet34, metrics=error_rate)
 learn.model
-# fit_one_cycle() is much better than fit() (paper in 2018), always use it. 4 is the # epoch to run, it's a good place to start
+# fit_one_cycle() is much better than fit() (paper in 2018), always use it.
+# 4 is the # epoch to run, it's a good place to start
 learn.fit_one_cycle(4)
 # This can saves the model trained on different DataBunch to different places
 learn.save('stage-1')

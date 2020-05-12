@@ -208,13 +208,15 @@ learn = collab_learner(data, n_factors=50, y_range=y_range)
 
 Netflix fixed the cold start problem by UX. It asks a new user whether they like the movies they show as a survey. For new movies, they just need to let some hundreds of people watch it and rate them. It wasn't quite a cold start problem for Netflix.
 
-But for selling products, you might not want people to look at your range of products. You could for example find the metadata of the users such as what geography they are from, their age, gender, and other features to predict whether they would like something.
+**But for selling products, you might not want people to look at your range of products. You could for example find the metadata of the users such as what geography they are from, their age, gender, and other features to predict whether they would like something.**
 
 Collaborative filtering is specifically for when you already have some data about the preferences of the users.
 
-A user has an embedding vector. A movie has an embedding vector. A bias term needs to be added in the user embedding and can be interpretted as *the user's tendency to like movies in general regardless of what movie*. Similarly, a bias term in the movie embedding is like *the likeability of a movie regardless of users*.
+**A user has an embedding vector. A movie has an embedding vector.** A bias term needs to be added in the user embedding and can be interpretted as *the user's tendency to like movies in general regardless of what movie*. Similarly, a bias term in the movie embedding is like *the likeability of a movie regardless of users*.
 
-The target value is the rating in the range 0 to 5. We dot the user embedding and the movie (item) embedding along with the weights, and *pass it through a sigmoid* (and times 5) to get a numbder between 0 - 5. Notice that this is actually a "logistic regression" (linear layer on inputs and a sigmoid) but with MSE loss and target variables as numbers between 0 - 5.
+The target value is the rating in the range 0 to 5. We dot the user embedding and the movie (item) embedding along with the weights, and *pass it through a sigmoid* (and times 5) to get a numbder between 0 - 5. *Notice that this is actually a "logistic regression" (linear layer on inputs and a sigmoid) but with MSE loss and target variables as numbers between 0 - 5.*
+
+*(Q: Sigmoid with MSE is interesting, is there a maximum likelihood explanation for this?)*
 
 Note that this mapping from the product of embeddings to the range [0, 5] is still regression and not classification, so the loss used is MSE and not cross entropy.
 

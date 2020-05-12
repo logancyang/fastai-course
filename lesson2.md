@@ -33,7 +33,8 @@ img
 The code below loads the trained model and is run at web app starting time once, should run fairly quickly.
 
 ```py
-# We create our Learner in production enviromnent like this, just make sure that path contains the file 'export.pkl' from before
+# We create our Learner in production enviromnent like this,
+# just make sure that path contains the file 'export.pkl' from before
 learn = load_learner(path)
 ```
 
